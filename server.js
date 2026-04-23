@@ -26,12 +26,28 @@ const app = express();
 
 // ✅ MUST be at the VERY TOP (before routes)
 app.use(cors({
-  origin: [
-    "https://food-delivery-client-daw2.vercel.app",
-    "https://food-delivery-client-daw2-4d1r8wxxp-arpits-projects-29070a78.vercel.app"
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  origin: (origin, callback) => {
+    // Allow Vercel preview deployments and production
+    const allowedOrigins = [
+      "https://food-delivery-client-daw2.vercel.app",
+      "https://food-delivery-client-daw2-4d1r8wxxp-arpits-projects-29070a78.vercel.app",
+      "http://localhost:3000",
+      "http://localhost:5173",
+      "http://localhost:5000"
+    ];
+
+    // Match any Vercel preview URL pattern
+    const vercelPattern = /^https:\/\/food-delivery-client-.*\.vercel\.app$/;
+
+    if (!origin || allowedOrigins.includes(origin) || vercelPattern.test(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  credentials: true
 }));
 
 // ✅ Handle preflight globally
