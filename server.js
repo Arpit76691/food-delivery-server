@@ -1,6 +1,5 @@
 import express from "express";
 import dotenv from "dotenv";
-import cors from "cors";
 import connectDB from "./config/db.js";
 
 import { apiLimiter, authLimiter, orderLimiter } from "./middleware/rateLimiter.js";
@@ -24,26 +23,21 @@ connectDB();
 
 const app = express();
 
-// ✅ FIXED CORS
-aapp.use(cors({
-  origin: "*",
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-}));
 
-app.options('*', cors());
-
-// ✅ HANDLE PREFLIGHT (VERY IMPORTANT)
+// ✅ FINAL CORS FIX (ONLY THIS — DO NOT ADD cors() PACKAGE)
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "*");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
+  // Handle preflight request
   if (req.method === "OPTIONS") {
     return res.sendStatus(200);
   }
 
   next();
 });
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
