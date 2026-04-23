@@ -26,10 +26,7 @@ const app = express();
 
 // ✅ FIXED CORS
 app.use(cors({
-  origin: [
-    "https://food-delivery-client-daw2.vercel.app",
-    "https://food-delivery-client-daw2-4d1r8wxxp-arpits-projects-29070a78.vercel.app"
-  ],
+  origin: true,
   credentials: true
 }));
 
