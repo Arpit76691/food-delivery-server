@@ -22,8 +22,7 @@ console.log("ENV CHECK:", process.env.MONGO_URI);
 // Connect DB
 connectDB();
 
-const express = require('express');
-const cors = require('cors');
+// Initialize the app
 const app = express();
 
 // Configure CORS
@@ -32,10 +31,6 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true // Enable this if you are passing cookies or authorization headers
 }));
-
-app.use(express.json());
-
-// ... your routes go here (e.g., app.use('/api/auth', authRoutes))
 
 // ✅ Handle preflight for ALL routes
 app.options("*", (req, res) => {
@@ -46,6 +41,7 @@ app.options("*", (req, res) => {
   res.sendStatus(200);
 });
 
+// Middleware for parsing JSON and URL-encoded data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
