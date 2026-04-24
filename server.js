@@ -22,16 +22,20 @@ console.log("ENV CHECK:", process.env.MONGO_URI);
 // Connect DB
 connectDB();
 
+const express = require('express');
+const cors = require('cors');
 const app = express();
 
-// ✅ CORS - MUST be at the VERY TOP (before routes)
+// Configure CORS
 app.use(cors({
-  origin: true,  // Allow all origins (reflection mode)
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
-  credentials: true,
-  optionsSuccessStatus: 200
+    origin: 'https://food-delivery-client-daw2.vercel.app', // Your frontend URL
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    credentials: true // Enable this if you are passing cookies or authorization headers
 }));
+
+app.use(express.json());
+
+// ... your routes go here (e.g., app.use('/api/auth', authRoutes))
 
 // ✅ Handle preflight for ALL routes
 app.options("*", (req, res) => {
